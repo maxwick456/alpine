@@ -1,29 +1,39 @@
 <!doctype html>
-<title>Alpine</title>
-<script src="./libv86.js"></script>
+<title>Instant on</title>
+
+<script src="./v86_all.js"></script>
+
+<link rel="stylesheet" href="./v86.css">
+
 <script>
 "use strict";
+
 window.onload = function()
 {
-    var emulator = new V86({
-        wasm_path: "./v86.wasm",
-        memory_size: 512 * 1024 * 1024,
-        vga_memory_size: 8 * 1024 * 1024,
+    var emulator = new V86Starter({
+        memory_size: 24 * 1024 * 1024,
+        vga_memory_size: 1 * 1024 * 1024,
         screen_container: document.getElementById("screen_container"),
-        bios: { url: "./seabios.bin" },
-        vga_bios: { url: "./vgabios.bin" },
-        filesystem: {
-            baseurl: "./alpine-v86.img",
-            basefs: "./alpine.json",
+        bios: {
+            url: "./seabios.bin",
         },
+        vga_bios: {
+            url: "./vgabios.bin",
+        },
+        hda: {
+            url: "./alpine-v86.img",
+        },
+	initial_state: {
+	    url: "./alpine-v86-1MB-24MB.bin",
+	},
+	disable_mouse: true,
         autostart: true,
-        bzimage_initrd_from_filesystem: true,
-        cmdline: "rw root=host9p rootfstype=9p rootflags=trans=virtio,cache=loose modules=virtio_pci tsc=reliable",
-        //initial_state: { url: "../images/alpine-state.bin" },
+	network_relay_url: "wss://relay.widgetry.org/",
+	//boot_order: 213,
     });
 };
 </script>
 <div id="screen_container">
-    <div style="white-space: pre; font: 14px monospace; line-height: 14px"></div>
-    <canvas style="display: none"></canvas>
+    <div id="screen"></div>
+    <canvas id="vga"></canvas>
 </div>
